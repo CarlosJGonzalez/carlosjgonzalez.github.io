@@ -1,0 +1,103 @@
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>Carlos Gonzalez | Full Stack & AI Developer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/hero.css">  
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <!-- Desktop Menu (Hidden on Mobile) -->
+            <div class="hidden md:flex space-x-6 items-center">
+                <a href="./" class="text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl">Home</a>
+                <a href="#about" class="text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl">About</a>
+                <a href="#skills" class="text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl">Skills</a>
+                <a href="#projects" class="text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl">Projects</a>
+                <a href="case-study" class="text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl">Case Study</a>
+                <a href="architect" class="text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl">
+                    Cloud Architect
+                </a>
+                <a href="solutions" class="text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl">
+                    Solutions
+                </a>                
+            </div>
+
+            <!-- Mobile Menu Button (Visible only on Mobile) -->
+            <div class="md:hidden flex items-center">
+                <button id="mobile-menu-button" class="text-gray-600 focus:outline-none">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown (Hidden by Default) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 px-4 py-4 space-y-4 shadow-lg">
+            <a href="./" class="block text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl font-medium">Home</a>
+            <a href="#about" class="block text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl font-medium">About</a>
+            <a href="#skills" class="block text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl font-medium">Skills</a>
+            <a href="#projects" class="block text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl font-medium">Projects</a>       
+            <a href="case-study" class="block text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl font-medium">Case Study</a>  
+            <a href="architect" class="block text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl font-medium">
+                Cloud Architect
+            </a>
+            <a href="solutions" class="block text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl font-medium">
+                Solutions
+            </a>            
+        </div>
+    </nav>
+    <section class="hero" id="about">
+        <div class="hero-banner">
+            <img src="assets/hero-banner.jpg" alt="Programming code on screen" width="1920" height="512">
+        </div>
+        <div class="hero-content">
+        <h1 class="hero-title">Carlos Gonzalez</h1>
+        <p class="hero-subtitle">Full Stack &amp; AI Developer</p>
+        </div>
+    </section>    
+    <!-- Featured Projects Section -->
+    <section id="projects" class="py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-4">
+            <h3 class="text-3xl font-bold mb-12 text-center">Case Study</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- website built using Lovable.com -->
+                <div class="border rounded-xl overflow-hidden hover:shadow-lg transition">
+                    <div class="p-6">
+                        <div class="mb-2">
+                            <h4 class="text-xl font-bold clear">BLE-Enabled Smart Parking Access Solution</h4>
+                            <img src="assets/ble/1.jpg" />
+                        </div>
+                        <p class="text-gray-600 mb-4">This protoype React-based Condo Management System is a comprehensive administrative solution designed to streamline residential operations and financial transparency. By centralizing core functions like automated ledger tracking, expense management, and vendor/provider databases, the application simplifies complex accounting workflows into a high-performance, responsive interface.</p>
+                        <p class="text-blue-500 mb-4">#GoogleNotebookLM #BLE #ethernet #relay #beacon #accesscontrol</p>
+                        <a href="ble" class="text-blue-600 font-semibold py-4">View Case Study →</a>
+                    </div>
+                </div>                
+                <!-- Computer Vision Project -->
+                <div class="border rounded-xl overflow-hidden hover:shadow-lg transition">
+                    <div class="p-6">
+                        <div class="mb-2">
+                            <h4 class="text-xl font-bold">High-Throughput Financial Data Ingestion Pipeline</h4>  
+                            <img src="assets/flow-parquet/1.jpg" />                          
+                        </div>
+                        <p class="text-gray-600 mb-4">
+                            <p class="text-gray-600 mb-4">
+                                This case study details the development of a high-efficiency financial data pipeline handle large-scale cryptocurrency information. 
+                                Critical infrastructure bottlenecks were addressed by replacing memory-intensive processing with a streaming pull-model architecture, which significantly lowers resource consumption. Key technical improvements include a transition from standard JSON storage to columnar Parquet files, enabling faster analytical queries and better scalability.
+                            </p>                            
+                        </p>
+                        <p class="text-blue-500 mb-4">
+                            #PHP8.4, #FlowPHPv0.34, #Docker, #Parquet, #CoinGecko API
+                        </p>
+                        <a href="flow-parquet" class="text-blue-600 font-semibold">View Case Study →</a>
+                    </div>
+                </div>                                
+            </div>
+        </div>
+    </section>
+</body>
+</html>

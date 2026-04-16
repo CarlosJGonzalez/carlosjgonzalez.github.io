@@ -1,0 +1,23 @@
+# 1. Prevent directory browsing (Security)
+RewriteEngine On
+RewriteRule ^architect$ architect.html [L,NC]
+RewriteRule ^solutions$ solutions.html [L,NC]
+RewriteRule ^case-study$ case-study.html [L,NC]
+RewriteRule ^ble$ ble.html [L,NC]
+RewriteRule ^flow-parquet$ flow-parquet.html [L,NC]
+Options -Indexes
+
+# 2. Enable custom error handling
+# Make sure these paths match your file structure. 
+# If you have a specific error.html, point to that.
+ErrorDocument 404 /404.html
+ErrorDocument 500 /500.html
+ErrorDocument 403 /403.html
+
+# 3. Optional: Redirect all non-existent files to your main portfolio
+# Use this ONLY if you want a "Single Page" feel where everything 
+# that doesn't exist goes back to the home page.
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.html [L]

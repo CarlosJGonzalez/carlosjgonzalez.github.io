@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>Carlos Gonzalez - Portfolio</title>
+    <style>  
+        .slide-wrap {
+            /* width: 95%; */
+            height: auto;
+         /* max-width: 1000px; */
+            border: 1px solid #333;
+            background: #fff;
+            padding: 5px;
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.05);
+            /* Initial state for lazy load animation */
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Class added via JS when slide enters viewport */
+        .slide-wrap.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .slide-wrap img {
+            /* Ensure the image itself doesn't block the gesture */
+            touch-action: pich-zoom;
+            pointer-events: auto;
+        }
+
+        img { 
+            width: 100%; 
+            height: auto; 
+            display: block; 
+            background: #eee; /* Placeholder color while loading */
+        }
+    </style>
+
+    <style>
+        /* Hint overlay on hover */
+        .slide-wrap { position: relative; cursor: pointer; }
+        .enlarge-hint {
+            position: absolute; bottom: 10px; right: 10px;
+            background: rgba(0,0,0,0.7); color: white;
+            padding: 5px 10px; font-size: 12px; font-family: monospace;
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .slide-wrap:hover .enlarge-hint { opacity: 1; }
+
+        /* Modal Background */
+        .modal {
+            display: none; 
+            position: fixed; z-index: 1000; 
+            left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            cursor: zoom-out;
+        }
+
+        /* Modal Image */
+        .modal-content {
+            margin: auto;
+            display: block;
+            width: auto;
+            max-width: 95%;
+            max-height: 90vh;
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        /* Close Button */
+        .close {
+            position: absolute; top: 20px; right: 35px;
+            color: #f1f1f1; font-size: 40px; font-weight: bold;
+            cursor: pointer;
+        }        
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">    
+    <link rel="stylesheet" href="assets/css/hero.css"> 
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">           
+            <!-- Desktop Menu (Hidden on Mobile) -->
+            <div class="hidden md:flex space-x-6 items-center">
+                <a href="./" class="text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl">Home</a>
+                <a href="#about" class="text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl">About</a>
+                <a href="#skills" class="text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl">Skills</a>
+                <a href="#projects" class="text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl">Projects</a>
+                <a href="case-study" class="text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl">Case Study</a>
+                <a href="architect" class="text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl">
+                    Cloud Architect
+                </a>
+                <a href="solutions" class="text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl">
+                    Solutions
+                </a>                
+            </div>
+
+            <!-- Mobile Menu Button (Visible only on Mobile) -->
+            <div class="md:hidden flex items-center">
+                <button id="mobile-menu-button" class="text-gray-600 focus:outline-none">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown (Hidden by Default) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 px-4 py-4 space-y-4 shadow-lg">
+            <a href="./" class="block text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl font-medium">Home</a>            
+            <a href="#about" class="block text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl font-medium">About</a>
+            <a href="#skills" class="block text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl font-medium">Skills</a>
+            <a href="#projects" class="block text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl font-medium">Projects</a>
+            <a href="case-study" class="block text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl font-medium">Case Study</a>              
+            <a href="architect"  class="block text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl font-medium">
+                Cloud Architect
+            </a>
+            <a href="solutions"  class="block text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl font-medium">
+                Solutions
+            </a>            
+        </div>
+    </nav>
+    <section class="hero">
+        <div class="hero-banner">
+            <img src="assets/hero-banner.jpg" alt="Programming code on screen" width="1920" height="512">
+        </div>
+        <div class="hero-content">
+        <h1 class="hero-title">Carlos Gonzalez</h1>
+        <p class="hero-subtitle">Full Stack &amp; AI Developer</p>
+        </div>
+    </section>    
+    <div class="max-w-6xl mx-auto px-4 py-20 text-center">
+        <div class="slide-wrap" onclick="openModal(this)">
+            <img src="assets/architect/img-01.jpg" alt="Slide 1" loading="lazy">
+            <div class="enlarge-hint">Click to Enlarge</div>
+        </div>
+        <div class="slide-wrap" onclick="openModal(this)">
+            <img src="assets/architect/img-02.jpg" alt="Slide 2" loading="lazy">
+            <div class="enlarge-hint">Click to Enlarge</div>
+        </div>
+        <div class="slide-wrap" onclick="openModal(this)">
+            <img src="assets/architect/img-03.jpg" alt="Slide 3" loading="lazy">
+            <div class="enlarge-hint">Click to Enlarge</div>
+        </div>
+        <div class="slide-wrap" onclick="openModal(this)">
+            <img src="assets/architect/img-04.jpg" alt="Slide 4" loading="lazy">
+            <div class="enlarge-hint">Click to Enlarge</div>
+        </div>
+        <div class="slide-wrap" onclick="openModal(this)">
+            <img src="assets/architect/img-05.jpg" alt="Slide 5" loading="lazy">
+            <div class="enlarge-hint">Click to Enlarge</div>
+        </div>
+        <div class="slide-wrap" onclick="openModal(this)">
+            <img src="assets/architect/img-06.jpg" alt="Slide 6" loading="lazy">
+            <div class="enlarge-hint">Click to Enlarge</div>
+        </div>
+        <div class="slide-wrap" onclick="openModal(this)">
+            <img src="assets/architect/img-07.jpg" alt="Slide 7" loading="lazy">
+            <div class="enlarge-hint">Click to Enlarge</div>
+        </div>
+        <div class="slide-wrap" onclick="openModal(this)">
+            <img src="assets/architect/img-08.jpg" alt="Slide 8" loading="lazy">
+            <div class="enlarge-hint">Click to Enlarge</div>
+        </div>
+        <div class="slide-wrap" onclick="openModal(this)">
+            <img src="assets/architect/img-09.jpg" alt="Slide 9" loading="lazy">
+            <div class="enlarge-hint">Click to Enlarge</div>
+        </div>
+        <div class="slide-wrap" onclick="openModal(this)">
+            <img src="assets/architect/img-10.jpg" alt="Slide 10" loading="lazy">
+            <div class="enlarge-hint">Click to Enlarge</div>
+        </div>
+
+        <div id="imageModal" class="modal" onclick="closeModal()">
+            <span class="close">&times;</span>
+            <img class="modal-content" id="fullImage">
+            <div id="caption"></div>
+        </div>        
+    </div>
+    <!-- Footer -->
+    <footer class="bg-white border-t py-8">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p class="font-bold">Carlos Gonzalez</p>
+            <p class="text-gray-500 text-sm">Plantation, FL | Native Spanish</p>
+            <p class="text-gray-500 italic text-xs">4.5 Level Pickleball Enthusiast</p>
+        </div>
+    </footer>    
+    <script>
+        /**
+         * Simple Intersection Observer to trigger the CSS fade-in
+         * when the slides scroll into view.
+         */
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.slide-wrap').forEach(slide => {
+            observer.observe(slide);
+        });
+    </script>
+    <!-- JavaScript for Mobile Menu Toggle -->
+    <script>
+        const btn = document.getElementById('mobile-menu-button');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // Close menu when a link is clicked
+        const menuLinks = menu.querySelectorAll('a');
+        menuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                menu.classList.add('hidden');
+            });
+        });
+    </script>    
+    <script>
+        function openModal(element) {
+            const modal = document.getElementById("imageModal");
+            const modalImg = document.getElementById("fullImage");
+            const captionText = document.getElementById("caption");
+            const clickedImg = element.getElementsByTagName('img')[0];
+
+            modal.style.display = "block";
+            modalImg.src = clickedImg.src;
+            captionText.innerHTML = clickedImg.alt;
+            
+            // Prevent scrolling of background while looking at diagram
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById("imageModal").style.display = "none";
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close on 'Esc' key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape") {
+                closeModal();
+            }
+        });        
+    </script>
+</body>
+</html>

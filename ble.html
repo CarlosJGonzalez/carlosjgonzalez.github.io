@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>Carlos Gonzalez - ble-case-study</title>
+    <style>
+        .slide-wrap {
+            /* width: 95%; */
+            height: auto;
+            /* max-width: 1000px; */
+            border: 1px solid #333;
+            background: #fff;
+            padding: 5px;
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.05);
+            /* Initial state for lazy load animation */
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Class added via JS when slide enters viewport */
+        .slide-wrap.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .slide-wrap img {
+            /* Ensure the image itself doesn't block the gesture */
+            touch-action: pich-zoom;
+            pointer-events: auto;
+        }
+
+        img { 
+            width: 100%; 
+            height: auto; 
+            display: block; 
+            background: #eee; /* Placeholder color while loading */
+        }
+    </style>
+
+    <style>
+
+        /* Hint overlay on hover */
+        .slide-wrap { position: relative; cursor: pointer; }
+        .enlarge-hint {
+            position: absolute; 
+            bottom: 6px; 
+            right: 5px;
+            background: rgba(0,0,0,0.7); color: white;
+            padding: 5px 10px; font-size: 12px; font-family: monospace;
+            opacity: 1; transition: opacity 0.3s;
+        }
+        .slide-wrap:hover .enlarge-hint { opacity: 1; }
+
+        /* Modal Background */
+        .modal {
+            display: none; 
+            position: fixed; z-index: 1000; 
+            left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            cursor: zoom-out;
+        }
+
+        /* Modal Image */
+        .modal-content {
+            margin: auto;
+            display: block;
+            width: auto;
+            max-width: 95%;
+            max-height: 90vh;
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        /* Close Button */
+        .close {
+            position: absolute; top: 20px; right: 35px;
+            color: #f1f1f1; font-size: 40px; font-weight: bold;
+            cursor: pointer;
+        }        
+    </style>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/hero.css">
+    <style>
+        .audio-player-group {
+            display: grid;
+            gap: 16px;
+        }
+
+        .audio-player {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            padding: 18px 20px;
+            border: 1px solid var(--portfolio-border);
+            border-radius: 10px;
+            background: linear-gradient(135deg, #eff6ff, #ffffff);
+        }
+
+        .audio-toggle {
+            border: none;
+            border-radius: 999px;
+            background: var(--portfolio-primary);
+            color: white;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+            box-shadow: 0 10px 25px rgba(3, 102, 214, 0.18);
+        }
+
+        .audio-toggle:hover {
+            transform: translateY(-1px);
+            background: #0256b8;
+        }
+
+        .audio-toggle:active {
+            transform: translateY(0);
+        }
+
+        .audio-toggle:focus-visible {
+            outline: 3px solid rgba(3, 102, 214, 0.25);
+            outline-offset: 3px;
+        }
+
+        .audio-icon {
+            width: 1.25rem;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .audio-status {
+            color: var(--portfolio-secondary-text);
+            font-size: 0.95rem;
+        }
+    </style>    
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <!-- <h1 class="text-xl font-bold text-blue-600">
+                <a href="./">Carlos Gonzalez</a>
+            </h1> -->
+            
+            <!-- Desktop Menu (Hidden on Mobile) -->
+            <div class="hidden md:flex space-x-6 items-center">
+                <a href="./" class="text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl">Home</a>
+                <a href="#about" class="text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl">About</a>
+                <a href="#skills" class="text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl">Skills</a>
+                <a href="#projects" class="text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl">Projects</a>
+                <a href="case-study" class="text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl">Case Study</a>
+                <a href="architect" class="text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl">
+                    Cloud Architect
+                </a>
+                <a href="solutions" class="text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl">
+                    Solutions
+                </a>                
+            </div>
+
+            <!-- Mobile Menu Button (Visible only on Mobile) -->
+            <div class="md:hidden flex items-center">
+                <button id="mobile-menu-button" class="text-gray-600 focus:outline-none">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown (Hidden by Default) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 px-4 py-4 space-y-4 shadow-lg">
+            <a href="./" class="block text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl font-medium">Home</a>
+            <a href="#about" class="block text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl font-medium">About</a>
+            <a href="#skills" class="block text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl font-medium">Skills</a>
+            <a href="#projects" class="block text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl font-medium">Projects</a>
+            <a href="case-study" class="block text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl font-medium">Case Study</a>            
+            <a href="architect"  class="block text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl font-medium">
+                Cloud Architect
+            </a>
+            <a href="solutions"  class="block text-blue-600 px-3 py-1 rounded hover:bg-blue-100 transition font-semibold text-xl font-medium">
+                Solutions
+            </a>            
+        </div>
+    </nav>
+<style>
+    :root {
+        --portfolio-primary: #0366d6; /* The primary blue from your site */
+        --portfolio-bg: #ffffff;
+        --portfolio-text: #24292e;
+        --portfolio-secondary-text: #586069;
+        --portfolio-border: #e1e4e8;
+        --portfolio-light-bg: #f6f8fa;
+    }
+
+    .case-study-container {
+        max-width: 850px;
+        margin: 40px auto;
+        padding: 0 20px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        color: var(--portfolio-text);
+    }
+
+    .project-card {
+        background: var(--portfolio-bg);
+        border: 1px solid var(--portfolio-border);
+        border-radius: 6px;
+        overflow: hidden;
+    }
+
+    .project-header {
+        padding: 32px;
+        background: var(--portfolio-light-bg);
+        border-bottom: 1px solid var(--portfolio-border);
+    }
+
+    .project-header h1 {
+        margin: 0;
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: var(--portfolio-text);
+    }
+
+    .role-badge {
+        display: inline-block;
+        margin-top: 12px;
+        padding: 4px 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--portfolio-primary);
+        border: 1px solid var(--portfolio-primary);
+        border-radius: 20px;
+    }
+
+    .project-body {
+        padding: 32px;
+        line-height: 1.6;
+    }
+
+    .project-section {
+        margin-bottom: 32px;
+    }
+
+    .project-section h2 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+        padding-left: 15px;
+        border-left: 4px solid var(--portfolio-primary);
+    }
+
+    .project-section p {
+        margin-bottom: 16px;
+        color: var(--portfolio-secondary-text);
+    }
+
+    .project-list {
+        margin: 0;
+        padding-left: 1.25rem;
+        color: var(--portfolio-secondary-text);
+    }
+
+    .project-list li {
+        margin-bottom: 12px;
+    }
+
+    .project-list strong {
+        color: var(--portfolio-text);
+    }
+
+    .stack-footer {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding-top: 20px;
+        border-top: 1px solid var(--portfolio-border);
+    }
+
+    .tag {
+        background: #e1f5fe;
+        color: #01579b;
+        padding: 5px 15px;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    @media (max-width: 600px) {
+        .project-header, .project-body { padding: 20px; }
+    }
+</style>
+<section class="hero">
+    <div class="hero-banner">
+        <img src="assets/hero-banner.jpg" alt="Programming code on screen" width="1920" height="512">
+    </div>
+    <div class="hero-content">
+    <h1 class="hero-title">Carlos Gonzalez</h1>
+    <p class="hero-subtitle">Full Stack &amp; AI Developer</p>
+    </div>
+</section>
+<div class="case-study-container">
+    <article class="project-card">
+        <header class="project-header">
+            <h1>BLE-Enabled Smart Parking Access Solution</h1>
+            <div class="role-badge">Lead Solution Architect</div>
+        </header>
+
+        <div class="project-body">
+            <div class="project-section">
+                <h2>Project Audio</h2>
+                <div class="audio-player-group">
+                    <div class="audio-player">
+                        <button
+                            class="audio-toggle"
+                            type="button"
+                            data-audio-target="project-brief-audio"
+                            data-default-label="Play Project Brief"
+                            data-pause-label="Pause Project Brief"
+                            aria-label="Play Project Brief"
+                        >
+                            <span class="audio-icon">▶</span>
+                            <span class="audio-label">Play Project Brief</span>
+                        </button>
+                        <span class="audio-status">Ready</span>
+
+                        <audio id="project-brief-audio" preload="metadata">
+                            <source src="assets/audio/ble/brief.m4a" type="audio/mp4">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+                    <div class="audio-player">
+                        <button
+                            class="audio-toggle"
+                            type="button"
+                            data-audio-target="debate-audio"
+                            data-default-label="Play Debate Audio"
+                            data-pause-label="Pause Debate Audio"
+                            aria-label="Play Debate Audio"
+                        >
+                            <span class="audio-icon">▶</span>
+                            <span class="audio-label">Play Debate Audio</span>
+                        </button>
+                        <span class="audio-status">Ready</span>
+
+                        <audio id="debate-audio" preload="metadata">
+                            <source src="assets/audio/ble/debate.m4a" type="audio/mp4">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>                    
+                </div>
+            </div>            
+            <div class="project-section">
+                <p>At <strong>Vertilink</strong>, I orchestrated the technical strategy for a high-traffic college campus parking system, transitioning the institution from legacy physical hardware to a secure, mobile-first ecosystem.</p>
+            </div>
+
+            <div class="project-section">
+                <h2>The Challenge</h2>
+                <p>The goal was to replace costly, physical RFID credentials with a scalable digital system. The architecture needed to ensure real-time validation of user status for thousands of concurrent students and faculty members while maintaining zero-latency access.</p>
+            </div>
+
+            <div class="project-section">
+                <h2>Architectural Solution</h2>
+                <ul class="project-list">
+                    <li><strong>Protocol Design:</strong> Defined the encrypted BLE handshake between user mobile devices and hardware for secure, low-latency discovery and connection.</li>
+                    <li><strong>Dynamic Authorization:</strong> Built the validation logic to restrict access exclusively to <strong>authorized and active students</strong> via real-time enrollment checks before a pulse was sent.</li>
+                    <li><strong>Hardware Integration:</strong> Engineered a hardware bridge using an <strong>Ethernet relay</strong> connected to a modem; the system triggered the physical gate via a network pulse upon successful authentication.</li>
+                    <li><strong>Infrastructure Resilience:</strong> Centralized the modem-connected relay setup to allow for remote management and high uptime across the campus network.</li>
+                </ul>
+            </div>
+
+            <div class="stack-footer">
+                <span class="tag">BLE</span>
+                <span class="tag">Ethernet Relay</span>
+                <span class="tag">IoT Architecture</span>
+                <span class="tag">Access Control</span>
+                <span class="tag">Network Integration</span>
+            </div>
+        </div>
+        
+    </article>
+</div>
+    
+
+
+
+    <div class="max-w-6xl mx-auto px-4 text-center">
+        <div class="slide-wrap" onclick="openModal(this)">
+            <img src="assets/ble/1.jpg" alt="Slide 1" loading="lazy">
+            <div class="enlarge-hint">Click to Enlarge</div>
+        </div>
+        <div class="slide-wrap" onclick="openModal(this)">
+            <img src="assets/ble/2.jpg" alt="Slide 2" loading="lazy">
+            <div class="enlarge-hint">Click to Enlarge</div>
+        </div>
+        <div class="slide-wrap" onclick="openModal(this)">
+            <img src="assets/ble/3.jpg" alt="Slide 3" loading="lazy">
+            <div class="enlarge-hint">Click to Enlarge</div>
+        </div>
+        <div class="slide-wrap" onclick="openModal(this)">
+            <img src="assets/ble/4.jpg" alt="Slide 4" loading="lazy">
+            <div class="enlarge-hint">Click to Enlarge</div>
+        </div>
+        <div class="slide-wrap" onclick="openModal(this)">
+            <img src="assets/ble/5.jpg" alt="Slide 5" loading="lazy">
+            <div class="enlarge-hint">Click to Enlarge</div>
+        </div>
+        <div class="slide-wrap" onclick="openModal(this)">
+            <img src="assets/ble/6.jpg" alt="Slide 6" loading="lazy">
+            <div class="enlarge-hint">Click to Enlarge</div>
+        </div>
+        <div class="slide-wrap" onclick="openModal(this)">
+            <img src="assets/ble/7.jpg" alt="Slide 7" loading="lazy">
+            <div class="enlarge-hint">Click to Enlarge</div>
+        </div>
+        <div class="slide-wrap" onclick="openModal(this)">
+            <img src="assets/ble/8.jpg" alt="Slide 8" loading="lazy">
+            <div class="enlarge-hint">Click to Enlarge</div>
+        </div>
+        <div class="slide-wrap" onclick="openModal(this)">
+            <img src="assets/ble/9.jpg" alt="Slide 9" loading="lazy">
+            <div class="enlarge-hint">Click to Enlarge</div>
+        </div>
+        <div class="slide-wrap" onclick="openModal(this)">
+            <img src="assets/ble/10.jpg" alt="Slide 10" loading="lazy">
+            <div class="enlarge-hint">Click to Enlarge</div>
+        </div>
+
+        <div id="imageModal" class="modal" onclick="closeModal()">
+            <span class="close">&times;</span>
+            <img class="modal-content" id="fullImage">
+            <div id="caption"></div>
+        </div>        
+    </div>
+    <!-- Footer -->
+    <footer class="bg-white border-t py-8">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p class="font-bold">Carlos Gonzalez</p>
+            <p class="text-gray-500 text-sm">Plantation, FL | Native Spanish</p>
+            <p class="text-gray-500 italic text-xs">4.5 Level Pickleball Enthusiast</p>
+        </div>
+    </footer>    
+    <script>
+        /**
+         * Simple Intersection Observer to trigger the CSS fade-in
+         * when the slides scroll into view.
+         */
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.slide-wrap').forEach(slide => {
+            observer.observe(slide);
+        });
+    </script>
+    <!-- JavaScript for Mobile Menu Toggle -->
+    <script>
+        const btn = document.getElementById('mobile-menu-button');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // Close menu when a link is clicked
+        const menuLinks = menu.querySelectorAll('a');
+        menuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                menu.classList.add('hidden');
+            });
+        });
+    </script>    
+    <script>
+        function openModal(element) {
+            const modal = document.getElementById("imageModal");
+            const modalImg = document.getElementById("fullImage");
+            const captionText = document.getElementById("caption");
+            const clickedImg = element.getElementsByTagName('img')[0];
+
+            modal.style.display = "block";
+            modalImg.src = clickedImg.src;
+            captionText.innerHTML = clickedImg.alt;
+            
+            // Prevent scrolling of background while looking at diagram
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById("imageModal").style.display = "none";
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close on 'Esc' key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape") {
+                closeModal();
+            }
+        });        
+    </script>
+    <script>
+        const audioButtons = document.querySelectorAll('.audio-toggle');
+
+        function resetAudioPlayer(audio) {
+            const player = audio.closest('.audio-player');
+            const button = player.querySelector('.audio-toggle');
+            const icon = player.querySelector('.audio-icon');
+            const label = player.querySelector('.audio-label');
+            const status = player.querySelector('.audio-status');
+
+            icon.textContent = '▶';
+            label.textContent = button.dataset.defaultLabel;
+            status.textContent = 'Ready';
+            button.setAttribute('aria-label', button.dataset.defaultLabel);
+        }
+
+        function pauseOtherAudios(currentAudio) {
+            document.querySelectorAll('.audio-player audio').forEach(audio => {
+                if (audio !== currentAudio) {
+                    audio.pause();
+                    audio.currentTime = 0;
+                    resetAudioPlayer(audio);
+                }
+            });
+        }
+
+        audioButtons.forEach(button => {
+            const targetId = button.dataset.audioTarget;
+            const audio = document.getElementById(targetId);
+            const player = button.closest('.audio-player');
+            const icon = player.querySelector('.audio-icon');
+            const label = player.querySelector('.audio-label');
+            const status = player.querySelector('.audio-status');
+
+            button.addEventListener('click', async () => {
+                if (audio.paused) {
+                    pauseOtherAudios(audio);
+
+                    try {
+                        await audio.play();
+                    } catch (error) {
+                        status.textContent = 'Playback blocked by browser';
+                    }
+                } else {
+                    audio.pause();
+                }
+            });
+
+            audio.addEventListener('play', () => {
+                icon.textContent = '❚❚';
+                label.textContent = button.dataset.pauseLabel;
+                status.textContent = 'Playing';
+                button.setAttribute('aria-label', button.dataset.pauseLabel);
+            });
+
+            audio.addEventListener('pause', () => {
+                if (!audio.ended) {
+                    icon.textContent = '▶';
+                    label.textContent = button.dataset.defaultLabel;
+                    status.textContent = audio.currentTime > 0 ? 'Paused' : 'Ready';
+                    button.setAttribute('aria-label', button.dataset.defaultLabel);
+                }
+            });
+
+            audio.addEventListener('ended', () => {
+                icon.textContent = '▶';
+                label.textContent = button.dataset.defaultLabel;
+                status.textContent = 'Finished';
+                button.setAttribute('aria-label', button.dataset.defaultLabel);
+            });
+        });
+    </script>
+</body>
+</html>
