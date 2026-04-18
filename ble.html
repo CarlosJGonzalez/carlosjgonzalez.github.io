@@ -319,6 +319,30 @@
 
         <div class="project-body">
             <div class="project-section">
+                <h2>Project Video</h2>
+
+                <div class="audio-player">
+                    <button
+                        class="media-toggle audio-toggle"
+                        type="button"
+                        data-media-target="project-video"
+                        data-default-label="Play Project Video"
+                        data-pause-label="Pause Project Video"
+                        aria-label="Play Project Video"
+                    >
+                        <span class="audio-icon">▶</span>
+                        <span class="audio-label">Play Project Video</span>
+                    </button>
+
+                    <span class="audio-status">Ready</span>
+
+                    <video id="project-video" preload="metadata" style="display: none; width: 100%; margin-top: 16px;" controls>
+                        <source src="/assets/video/ble/video.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+            <div class="project-section">
                 <h2>Project Audio</h2>
                 <div class="audio-player-group">
                     <div class="audio-player">
@@ -588,5 +612,67 @@
             });
         });
     </script>
+    <script>
+        const mediaButtons = document.querySelectorAll('.media-toggle');
+
+        function resetMediaPlayer(media) {
+            const player = media.closest('.audio-player');
+            const button = player.querySelector('.media-toggle');
+            const icon = player.querySelector('.audio-icon');
+            const label = player.querySelector('.audio-label');
+            const status = player.querySelector('.audio-status');
+
+            icon.textContent = '▶';
+            label.textContent = button.dataset.defaultLabel;
+            status.textContent = 'Ready';
+            button.setAttribute('aria-label', button.dataset.defaultLabel);
+        }
+
+        mediaButtons.forEach(button => {
+            const targetId = button.dataset.mediaTarget;
+            const media = document.getElementById(targetId);
+            const player = button.closest('.audio-player');
+            const icon = player.querySelector('.audio-icon');
+            const label = player.querySelector('.audio-label');
+            const status = player.querySelector('.audio-status');
+
+            button.addEventListener('click', async () => {
+                if (media.paused) {
+                    try {
+                        media.style.display = 'block';
+                        await media.play();
+                    } catch (error) {
+                        status.textContent = 'Playback blocked by browser';
+                    }
+                } else {
+                    media.pause();
+                }
+            });
+
+            media.addEventListener('play', () => {
+                icon.textContent = '❚❚';
+                label.textContent = button.dataset.pauseLabel;
+                status.textContent = 'Playing';
+                button.setAttribute('aria-label', button.dataset.pauseLabel);
+            });
+
+            media.addEventListener('pause', () => {
+                if (!media.ended) {
+                    icon.textContent = '▶';
+                    label.textContent = button.dataset.defaultLabel;
+                    status.textContent = media.currentTime > 0 ? 'Paused' : 'Ready';
+                    button.setAttribute('aria-label', button.dataset.defaultLabel);
+                }
+            });
+
+            media.addEventListener('ended', () => {
+                icon.textContent = '▶';
+                label.textContent = button.dataset.defaultLabel;
+                status.textContent = 'Finished';
+                button.setAttribute('aria-label', button.dataset.defaultLabel);
+            });
+        });
+    </script>
+
 </body>
 </html>
