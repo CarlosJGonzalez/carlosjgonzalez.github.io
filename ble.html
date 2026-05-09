@@ -567,6 +567,7 @@
         }
 
         audioButtons.forEach(button => {
+            if( !button.dataset.audioTarget ) return;
             const targetId = button.dataset.audioTarget;
             const audio = document.getElementById(targetId);
             const player = button.closest('.audio-player');
