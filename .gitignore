@@ -2,3 +2,5 @@
 *.pdf
 *.pptx
 /bk/*
+*.zip
+/mutcha-case-study/*
