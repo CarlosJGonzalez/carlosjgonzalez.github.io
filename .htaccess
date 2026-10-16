@@ -1,5 +1,6 @@
 # 1. Prevent directory browsing (Security)
 RewriteEngine On
+RewriteRule ^parguito$ parguito.html [L,NC]
 RewriteRule ^mutcha-pizza$ mutcha-pizza.html [L,NC]
 RewriteRule ^seated$ seated.html [L,NC]
 RewriteRule ^architect$ architect.html [L,NC]
