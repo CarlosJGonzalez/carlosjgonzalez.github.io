@@ -23,7 +23,11 @@
     -webkit-mask-composite: source-in; mask-composite: intersect;
   }
   .hero-content { position: relative; z-index: 1; padding: 20vh 8vw; }
-  h1 { font-size: clamp(3rem, 10vw, 8rem); margin: 0; line-height: .9; }
+  h1 { font-size: clamp(5rem, 10vw, 8rem); margin: 0; line-height: .9; }
+
+  @media (min-width: 768px) {
+    h1 { font-size: clamp(8rem, 10vw, 8rem); margin: 0; line-height: .9; }
+  }
 </style></head>
 <body><!--$--><header class="fixed inset-x-0 top-0 z-50 border-b border-border/60 bg-background/70 backdrop-blur-xl" data-tsd-source="/src/components/site.tsx:25:5"><div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-6" data-tsd-source="/src/components/site.tsx:26:7"><a class="min-w-0 font-mono text-sm tracking-tight active" data-tsd-source="/src/components/site.tsx:27:9" href="" data-status="active" aria-current="page"><span class="text-primary" data-tsd-source="/src/components/site.tsx:28:11">cjg</span>/2026</a><nav class="hidden items-center gap-6 font-mono text-xs uppercase tracking-widest text-muted-foreground sm:flex" data-tsd-source="/src/components/site.tsx:32:9"><a href="#portfolio" class="transition-colors hover:text-primary" data-tsd-source="/src/components/site.tsx:35:15">Portfolio</a><a class="transition-colors hover:text-primary" data-tsd-source="/src/components/site.tsx:39:15" href="case-study">Case Study</a><a href="#arsenal" class="transition-colors hover:text-primary" data-tsd-source="/src/components/site.tsx:35:15">Arsenal</a><a href="#contact" class="transition-colors hover:text-primary">Contact</a></nav><button type="button" aria-expanded="false" aria-label="Open menu" class="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-border text-foreground transition-colors hover:border-primary hover:text-primary sm:hidden" data-tsd-source="/src/components/site.tsx:47:9"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu h-5 w-5" aria-hidden="true" data-tsd-source="/src/components/site.tsx:54:47"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></header>
     <section class="hero">
@@ -32,7 +36,7 @@
             <div class="absolute inset-0" data-tsd-source="/src/components/site.tsx:93:7"></div>
             <div class="absolute inset-0 grid-lines opacity-60" data-tsd-source="/src/components/site.tsx:94:7"></div>
             <div class="absolute inset-0 bg-glow" data-tsd-source="/src/components/site.tsx:95:7"></div>
-            <div style="top:37vh;" class="absolute mx-auto flex max-w-7xl flex-col gap-10 px-6 lg:flex-row lg:items-end lg:justify-between" data-tsd-source="/src/components/site.tsx:96:7">
+            <div class="top-[37vh] absolute mx-auto flex max-w-7xl flex-col gap-10 px-6 lg:flex-row lg:items-end lg:justify-between" data-tsd-source="/src/components/site.tsx:96:7">
                 <div class="animate-rise" data-tsd-source="/src/components/site.tsx:97:9">
                     <p class="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/40 px-3 py-1 font-mono text-xs uppercase tracking-widest text-primary" data-tsd-source="/src/components/site.tsx:98:11"><span class="h-1.5 w-1.5 animate-pulse rounded-full bg-primary" data-tsd-source="/src/components/site.tsx:99:13"></span> Full Stack &amp; AI Developer</p>
                     <h1 class="font-display font-bold leading-[0.85] tracking-tighter text-[18vw] md:text-[10rem]" data-tsd-source="/src/components/site.tsx:101:11">Carlos<br data-tsd-source="/src/components/site.tsx:103:13">
